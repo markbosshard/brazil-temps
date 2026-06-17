@@ -102,6 +102,9 @@
     .readout{text-align:left}
     .row{grid-template-columns:74px 1fr auto;gap:7px}
     .city-name{display:none}
+    #map{max-height:46vh}
+    .topbar{margin-bottom:14px}
+    .tl-mobile{position:sticky;top:0;z-index:30;background:var(--bg);padding:10px 0 12px;margin:0;border-bottom:1px solid var(--line-2)}
   }
   @media (prefers-reduced-motion:reduce){ .state,.dot,.seg,.med{transition:none} }
 </style>
@@ -708,6 +711,24 @@ function start(){
   raf=requestAnimationFrame(step);
 }
 playBtn.addEventListener('click',()=>playing?stop():start());
+
+/* ---------- RESPONSIVE: slider placement ---------- */
+const mqMobile=window.matchMedia('(max-width:760px)');
+const tlEl=document.querySelector('.timeline');
+const topbarEl=document.querySelector('.topbar');
+const stageEl=document.querySelector('.stage');
+const ladderCardEl=document.getElementById('ladder').closest('.card');
+function placeTimeline(){
+  if(mqMobile.matches){
+    if(tlEl.parentNode!==stageEl) stageEl.insertBefore(tlEl,ladderCardEl);
+    tlEl.classList.add('tl-mobile');
+  }else{
+    if(tlEl.parentNode!==topbarEl) topbarEl.appendChild(tlEl);
+    tlEl.classList.remove('tl-mobile');
+  }
+}
+mqMobile.addEventListener('change',placeTimeline);
+placeTimeline();
 
 /* ---------- INIT ---------- */
 setCountry(cur,false);
