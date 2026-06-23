@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="darkreader-lock"/>
+<meta name="color-scheme" content="dark"/>
 <title>São Paulo District Map — Safety & Crime</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -43,6 +45,19 @@
  #hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:1200;display:none;
    background:#3a2326;border:1px solid #6b3b3b;color:#ffd9d9;font-size:12px;padding:8px 12px;border-radius:8px;max-width:340px;text-align:center;line-height:1.4}
  @media(max-width:680px){#legend{min-width:170px}.cbrow{height:120px}}
+ .hidden{display:none!important}
+ .phead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+ #legend .phead{margin-bottom:9px}
+ .ptitle{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:600}
+ .pbtn{appearance:none;-webkit-appearance:none;background:#0b1322;border:1px solid var(--line);color:#cdd6e4;border-radius:7px;width:28px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none}
+ .pbtn:hover{border-color:#3a4660;color:#fff}
+ .pbtn svg{width:15px;height:15px;display:block}
+ #legend{max-height:72vh;overflow:auto}
+ .launch{position:absolute;z-index:1001;background:rgba(16,26,46,.95);border:1px solid var(--line);color:#e8eef6;border-radius:10px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;gap:7px;box-shadow:0 2px 10px #0006}
+ .launch:hover{border-color:#3a4660}
+ .launch svg{width:16px;height:16px;display:block;flex:none}
+ #ctrlOpen{left:12px;top:12px;width:42px;height:38px;justify-content:center;padding:0}
+ #legendOpen{right:12px;bottom:18px;padding:10px 13px;font-size:12px;font-weight:600}
 </style></head>
 <body><div id="app">
  <header>
@@ -52,6 +67,8 @@
  <div id="map"></div><div id="hint"></div>
 
  <div id="ctrl" class="panel">
+   <div class="phead"><span class="ptitle">Map controls</span>
+     <button class="pbtn" id="ctrlCollapse" title="Collapse" aria-label="Collapse controls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
    <div>
      <span class="cap">Data layer</span>
      <select id="layer">
@@ -76,7 +93,11 @@
    </div>
  </div>
 
+ <button class="launch hidden" id="ctrlOpen" title="Show controls" aria-label="Show controls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+
  <div id="legend" class="panel">
+   <div class="phead"><span class="ptitle">Legend</span>
+     <button class="pbtn" id="legendCollapse" title="Collapse" aria-label="Collapse legend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></button></div>
    <div class="ltitle" id="lg-title"></div>
    <div class="cbrow"><div class="cbar" id="lg-bar"></div><div class="ticks" id="lg-ticks"></div></div>
    <div class="tiers" id="lg-tiers">
@@ -87,6 +108,8 @@
    </div>
    <div class="desc" id="lg-desc"></div>
  </div>
+
+ <button class="launch hidden" id="legendOpen" title="Show legend" aria-label="Show legend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h10M4 17h10"/></svg><span>Legend</span></button>
 </div>
 
 <script>
@@ -125,6 +148,7 @@ Object.values(bases).forEach(l=>{l.on('tileerror',()=>{if(++tileErr>=3&&!tileOk)
 hint.innerHTML='Base tiles blocked in this preview. <b>Open this file in a browser</b> and the street/aerial layers load and align exactly.';
 
 let opacity=0.80, showBorders=true, showLabels=true;
+let hovered=null;
 const layers=[];
 function styleFor(d){const v=d.vals[layerKey];
   return {color:showBorders?'#0d1426':colorFor(layerKey,v),weight:showBorders?0.7:0.3,
@@ -134,8 +158,13 @@ DATA.forEach(d=>{
   lyr._d=d; layers.push(lyr);
   const t=L.tooltip({permanent:true,direction:'center',className:'dlabel',opacity:1})
     .setContent(d.name).setLatLng([d.label[1],d.label[0]]); lyr._tip=t;
-  lyr.on('mouseover',()=>{lyr.setStyle({weight:2.2,color:'#fff',opacity:1});lyr.bringToFront()});
-  lyr.on('mouseout',()=>lyr.setStyle(styleFor(lyr._d)));
+  lyr.on('mouseover',()=>{
+    if(hovered && hovered!==lyr) hovered.setStyle(styleFor(hovered._d));
+    hovered=lyr;
+    lyr.setStyle({weight:2.2,color:'#fff',opacity:1});
+    lyr.bringToFront();
+  });
+  lyr.on('mouseout',()=>{ if(hovered===lyr){ lyr.setStyle(styleFor(lyr._d)); hovered=null; } });
   lyr.on('click',e=>{
     const v=d.vals[layerKey]; const L=CMAPS[layerKey];
     let extra='';
@@ -146,7 +175,11 @@ DATA.forEach(d=>{
 function L_pop(ll,html){L.popup().setLatLng(ll).setContent(html).openOn(map);}
 const grp=L.featureGroup(layers); map.fitBounds(grp.getBounds().pad(0.03));
 
-function restyle(){layers.forEach(l=>l.setStyle(styleFor(l._d)));}
+function restyle(){hovered=null;layers.forEach(l=>l.setStyle(styleFor(l._d)));}
+// catch-all: clear any lingering highlight when the cursor leaves the map
+function clearHover(){ if(hovered){ hovered.setStyle(styleFor(hovered._d)); hovered=null; } }
+map.getContainer().addEventListener('pointerleave', clearHover);
+map.on('mouseout', clearHover);
 function applyLabelColor(){const dark=DARKBASE[curKey];
   document.querySelectorAll('.leaflet-tooltip.dlabel').forEach(el=>el.classList.toggle('dark',dark));}
 function refreshLabels(){const z=map.getZoom();
@@ -173,5 +206,21 @@ document.getElementById('op').oninput=e=>{opacity=e.target.value/100;restyle();}
 document.getElementById('bord').onchange=e=>{showBorders=e.target.checked;restyle();};
 document.getElementById('lbl').onchange=e=>{showLabels=e.target.checked;refreshLabels();};
 
+// collapsible panels
+const ctrlEl=document.getElementById('ctrl'), legendEl=document.getElementById('legend');
+const ctrlOpenBtn=document.getElementById('ctrlOpen'), legendOpenBtn=document.getElementById('legendOpen');
+function setCtrl(open){ctrlEl.classList.toggle('hidden',!open);ctrlOpenBtn.classList.toggle('hidden',open);}
+function setLegend(open){legendEl.classList.toggle('hidden',!open);legendOpenBtn.classList.toggle('hidden',open);}
+document.getElementById('ctrlCollapse').onclick=()=>setCtrl(false);
+ctrlOpenBtn.onclick=()=>setCtrl(true);
+document.getElementById('legendCollapse').onclick=()=>setLegend(false);
+legendOpenBtn.onclick=()=>setLegend(true);
+setCtrl(true);     // controls: expanded by default, collapse via the ‹ chevron
+setLegend(false);  // legend: collapsed by default, opens from the bottom pill
+
 renderLegend(); refreshLabels();
-</script></body></html>
+</script>
+<!-- GoatCounter analytics -->
+<script data-goatcounter="https://citysafety-proj.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body></html>
