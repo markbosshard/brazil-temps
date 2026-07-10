@@ -28,8 +28,8 @@
   .note{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:14px;border-top:1px solid #223350;padding-top:12px}
   .sizekey{display:flex;align-items:flex-end;gap:14px;margin:10px 0 4px}
   .sizekey .circle{border-radius:50%;background:rgba(62,166,255,.25);border:1px solid var(--bc)}
-  .metric-tag{display:inline-block;background:#1b2942;border:1px solid #2b3f63;color:#cfe0ff;
-    font-size:11px;padding:2px 8px;border-radius:999px;margin-top:6px}
+  .legend p{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .legend p b{color:var(--ink)}
   /* popup */
   .leaflet-popup-content-wrapper{background:#0f1a2e;color:var(--ink);border-radius:12px;
     box-shadow:0 10px 40px rgba(0,0,0,.55);border:1px solid #26385a}
@@ -37,14 +37,20 @@
   .leaflet-popup-content{margin:14px 16px;line-height:1.4}
   .pop h2{margin:0 0 2px;font-size:16px}
   .pop .prov{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+  .pop .rimg{width:100%;height:105px;object-fit:cover;border-radius:8px;margin:8px 0 2px;
+    border:1px solid #26385a;display:block;background:#15233c}
+  .pop .rcap{font-size:9.5px;color:#5d7396;margin:2px 0 0;text-align:right}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
   .stat{background:#15233c;border:1px solid #26385a;border-radius:8px;padding:7px 8px;text-align:center}
   .stat .v{font-size:16px;font-weight:700}
   .stat .l{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
   .stat.hl{border-color:#3a5a8f;background:#182a49}
   .stat.hl .v{color:#7fc0ff}
+  .lift{font-size:12.3px;color:#d5e6ff;background:#12203a;border-left:3px solid #7fc0ff;
+    padding:8px 10px;border-radius:0 8px 8px 0;margin:8px 0 0}
+  .lift .lt{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:2px}
   .uniq{font-size:12.7px;color:#dbe7fb;background:#12203a;border-left:3px solid var(--bc);
-    padding:8px 10px;border-radius:0 8px 8px 0;margin-top:4px}
+    padding:8px 10px;border-radius:0 8px 8px 0;margin-top:8px}
   .leaflet-container{background:#0b1220}
   .ski-pin{background:none;border:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));
     transition:transform .12s ease}
@@ -57,7 +63,7 @@
 <div id="wrap">
   <header>
     <h1>⛷️🌎 Skiregionen Kanadas &amp; der USA — <span>für Ruedi Bosshard</span></h1>
-    <p class="sub">Pin-Größe = Pistenkilometer. Klicke auf ein Skigebiet für Besucherzahlen, Schneefall &amp; was es einzigartig macht.</p>
+    <p class="sub">Pin-Größe = Pistenkilometer. Klicke auf ein Skigebiet für Besucherzahlen, Schneefall, Experten-Terrain, Bahnen &amp; ein Foto der Region.</p>
   </header>
   <div id="main">
     <div id="map"></div>
@@ -80,17 +86,28 @@
         </div>
       </div>
       <div class="legend" style="margin-top:18px">
-        <h3>Meine Bonus-Kennzahl</h3>
-        <span class="metric-tag">❄ Durchschnittlicher Jahresschneefall</span>
-        <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0">
-          Ich habe <b style="color:var(--ink)">Schneefall</b> als dritte Zahl gewählt — er ist der beste einzelne Indikator für die
-          Pulverschneequalität und ein wichtiger Treiber für den Ruf eines Skigebiets. Deshalb spielen Kult-Berge wie Whitewater &amp; Fernie
-          weit über ihrer Größe, und deshalb ist das Interior von BC ein weltweiter Pulverschnee-Magnet.</p>
+        <h3>❄ Schneefall pro Jahr</h3>
+        <p><b>Schneefall</b> ist der beste einzelne Indikator für die Pulverschneequalität und ein wichtiger Treiber
+          für den Ruf eines Skigebiets. Deshalb spielen Kult-Berge wie Whitewater &amp; Fernie weit über ihrer Größe,
+          und deshalb ist das Interior von BC ein weltweiter Pulverschnee-Magnet.</p>
+      </div>
+      <div class="legend" style="margin-top:18px">
+        <h3>◆ Experten-Terrain</h3>
+        <p>Anteil der Abfahrten, die als <b>schwarz / doppelschwarz</b> eingestuft sind — je höher, desto stärker zieht
+          ein Berg Freerider und Könner an. Die Spanne reicht von Familienbergen wie Blue Mountain (~15&nbsp;%) bis zu
+          Steilklassikern wie Kicking Horse (~60&nbsp;%) und Big Sky (~55&nbsp;%).</p>
+      </div>
+      <div class="legend" style="margin-top:18px">
+        <h3>🚡 Bahnen &amp; Lifte</h3>
+        <p>Für den Seilbahn-Fan: Jedes Popup nennt die <b>wichtigste Bahn und ihr Baujahr</b> — von Whistlers
+          rekordverdächtiger PEAK&nbsp;2&nbsp;PEAK-Gondel (2008) über Vails Gondola One mit Sitzheizung (2012) bis zur
+          nagelneuen Lone Peak Tram (2023) in Big Sky.</p>
       </div>
       <p class="note">
         Pistenkilometer und Höhenunterschied stammen aus offiziellen Angaben der Skigebiete. <b>Die jährlichen Besucherzahlen sind ungefähre Werte</b> —
         die meisten kanadischen Skigebiete veröffentlichen keine genauen Zahlen, daher sind kleinere Gebiete Schätzungen zur Einordnung.
-        Daten zusammengestellt im Juli 2026.</p>
+        Experten-Anteile sind aus den offiziellen Pistenplänen auf 5&nbsp;% gerundet; Liftdaten Stand Juli 2026.
+        Fotos: Wikimedia Commons. Daten zusammengestellt im Juli 2026.</p>
     </aside>
   </div>
 </div>
@@ -99,62 +116,100 @@
 <script>
 const COLORS={BC:'#3ea6ff',AB:'#ff6b6b',QC:'#b388ff',ON:'#4ad991',AT:'#2dd4bf',US:'#f5a623'};
 
-// piste = marked trail km | visitors = approx annual (thousands) | snow = avg annual snowfall (m) | vert = vertical drop (m)
+// one representative photo per region (Wikimedia Commons, hotlink-stable thumb URLs)
+const REGION_IMG={
+ BC:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Upper_portion_of_Blackcomb_from_Whistler_%2816152555252%29.jpg/500px-Upper_portion_of_Blackcomb_from_Whistler_%2816152555252%29.jpg",cap:"Blackcomb, BC · Wikimedia Commons"},
+ AB:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ski_Trails_in_sight_of_Chateau_DSCN1291_Thompson_250_%2847959865336%29.jpg/500px-Ski_Trails_in_sight_of_Chateau_DSCN1291_Thompson_250_%2847959865336%29.jpg",cap:"Lake Louise, Alberta · Wikimedia Commons"},
+ QC:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Mont-Tremblant_ski_hill_South_Face.jpg/500px-Mont-Tremblant_ski_hill_South_Face.jpg",cap:"Mont Tremblant, Québec · Wikimedia Commons"},
+ ON:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Blue_Mountain_Ontario_at_night_%28landscape%29.jpg/500px-Blue_Mountain_Ontario_at_night_%28landscape%29.jpg",cap:"Blue Mountain bei Nacht, Ontario · Wikimedia Commons"},
+ AT:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Marble_Mountain_Ski_resort.jpg/500px-Marble_Mountain_Ski_resort.jpg",cap:"Marble Mountain, Neufundland · Wikimedia Commons"},
+ US:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Jackson_hole_new_tram.jpg/500px-Jackson_hole_new_tram.jpg",cap:"Aerial Tram, Jackson Hole · Wikimedia Commons"}
+};
+
+// piste = marked trail km | visitors = approx annual (thousands) | snow = avg annual snowfall (m)
+// vert = vertical drop (m) | exp = % advanced/expert terrain (rounded to 5) | lift = signature lift(s) & year
 const resorts=[
- {name:"Whistler Blackcomb",prov:"Britisch-Kolumbien",reg:"BC",lat:50.1163,lng:-122.9574,piste:200,visitors:2200,snow:11.8,vert:1609,
+ {name:"Whistler Blackcomb",prov:"Britisch-Kolumbien",reg:"BC",lat:50.1163,lng:-122.9574,piste:200,visitors:2200,snow:11.8,vert:1609,exp:25,
+  lift:"37 Anlagen · PEAK 2 PEAK-Gondel (2008) mit 3 km freiem Spannfeld — Weltrekord. 2022 kamen gleich drei neue Bahnen dazu, u.a. eine 8er-Sesselbahn.",
   uniq:"Das größte Skigebiet Nordamerikas — zwei riesige Berge, verbunden durch die rekordverdächtige PEAK 2 PEAK-Gondel, und Austragungsort der Olympischen Winterspiele 2010. 8.171 Acres Gelände und ein lebhaftes Fußgängerdorf an der Talstation."},
- {name:"Sun Peaks",prov:"Britisch-Kolumbien",reg:"BC",lat:50.8837,lng:-119.8853,piste:137,visitors:500,snow:5.6,vert:881,
+ {name:"Sun Peaks",prov:"Britisch-Kolumbien",reg:"BC",lat:50.8837,lng:-119.8853,piste:137,visitors:500,snow:5.6,vert:881,exp:30,
+  lift:"13 Anlagen, überwiegend moderne Hochgeschwindigkeits-Sessel — das gesamte Dorf ist Ski-in/Ski-out erschlossen.",
   uniq:"Kanadas zweitgrößtes Skigebiet, verteilt auf drei Berge mit einem charmanten Ski-in/Ski-out-Bergdorf. Die Lage im Interior sorgt für leichten, trockenen 'Champagne'-Schnee und herrlich leere Pisten."},
- {name:"Big White",prov:"Britisch-Kolumbien",reg:"BC",lat:49.7168,lng:-118.9331,piste:118,visitors:450,snow:7.5,vert:777,
+ {name:"Big White",prov:"Britisch-Kolumbien",reg:"BC",lat:49.7168,lng:-118.9331,piste:118,visitors:450,snow:7.5,vert:777,exp:30,
+  lift:"16 Anlagen inkl. Gondel und schneller Quad-Sessel — fast alle direkt vom Ski-in/Ski-out-Dorf erreichbar.",
   uniq:"Heimat der unheimlichen 'Schneegeister' — Bäume, die von windgetriebenem Raueis umhüllt sind. Ein völlig eigenständiges Ski-in/Ski-out-Dorf hoch über dem Okanagan mit zuverlässig tiefem, trockenem Pulverschnee."},
- {name:"Revelstoke",prov:"Britisch-Kolumbien",reg:"BC",lat:51.0092,lng:-118.1636,piste:75,visitors:200,snow:10.5,vert:1713,
+ {name:"Revelstoke",prov:"Britisch-Kolumbien",reg:"BC",lat:51.0092,lng:-118.1636,piste:75,visitors:200,snow:10.5,vert:1713,exp:45,
+  lift:"Die zweistufige Revelation-Gondel (2007) überwindet seit der Eröffnung den Großteil der 1.713 Höhenmeter in einem Zug.",
   uniq:"Der größte liftbediente Höhenunterschied Nordamerikas — unglaubliche 1.713 m. Das einzige Skigebiet der Welt, das Lift-, Cat-, Heli- UND Backcountry-Skifahren von einem einzigen Dorf aus bietet."},
- {name:"Kicking Horse",prov:"Britisch-Kolumbien",reg:"BC",lat:51.2981,lng:-117.0506,piste:60,visitors:170,snow:7.0,vert:1260,
+ {name:"Kicking Horse",prov:"Britisch-Kolumbien",reg:"BC",lat:51.2981,lng:-117.0506,piste:60,visitors:170,snow:7.0,vert:1260,exp:60,
+  lift:"Golden Eagle Express-Gondel (2000) — eine der wenigen Gondeln der kanadischen Rockies, in 12 Minuten zum Grat.",
   uniq:"85 Rinnen im gesicherten Gelände und vier alpine Mulden mit steilem, leichtem 'Champagne Powder' — alle erreichbar über eine Gondel, die zum Eagle's Eye hinaufführt, dem höchstgelegenen Restaurant Kanadas."},
- {name:"Fernie Alpine",prov:"Britisch-Kolumbien",reg:"BC",lat:49.4626,lng:-115.0876,piste:60,visitors:200,snow:11.0,vert:1082,
+ {name:"Fernie Alpine",prov:"Britisch-Kolumbien",reg:"BC",lat:49.4626,lng:-115.0876,piste:60,visitors:200,snow:11.0,vert:1082,exp:35,
+  lift:"10 Anlagen; der Polar-Peak-Sessel (2011) erschloss erstmals den Gipfelgrat.",
   uniq:"Fünf legendäre alpine Mulden unter einigen der tiefsten Schneemengen der kanadischen Rocky Mountains, rund um eine historische Kohlebergbaustadt voller Charakter."},
- {name:"SilverStar",prov:"Britisch-Kolumbien",reg:"BC",lat:50.3606,lng:-119.0567,piste:80,visitors:300,snow:7.0,vert:760,
+ {name:"SilverStar",prov:"Britisch-Kolumbien",reg:"BC",lat:50.3606,lng:-119.0567,piste:80,visitors:300,snow:7.0,vert:760,exp:30,
+  lift:"12 Anlagen; kompaktes Liftsystem direkt rund ums bunte Dorf — kurze Wege, kaum Wartezeiten.",
   uniq:"Ein farbenfrohes Bergdorf im viktorianischen Stil, in dem man bis vor die Haustür fährt. Vorne präparierte Cruiser, hinten pulvrige Baumabfahrten, dazu eines der größten Langlaufnetze Kanadas."},
- {name:"Whitewater",prov:"Britisch-Kolumbien",reg:"BC",lat:49.4419,lng:-117.1450,piste:40,visitors:110,snow:12.0,vert:625,
+ {name:"Whitewater",prov:"Britisch-Kolumbien",reg:"BC",lat:49.4419,lng:-117.1450,piste:40,visitors:110,snow:12.0,vert:625,exp:40,
+  lift:"Bewusst old-school: nur 4 Lifte, klassische Sesselbahnen statt Gondeln — hier ist der Schnee die Technik-Attraktion.",
   uniq:"Ein Kult-Pulverschneeberg bei Nelson, der rund 12 m Schnee pro Jahr abbekommt — fast ohne Beschneiung und mit minimaler Präparierung. Kleine Fläche, atemberaubender Schneefall, überaus treue Einheimische."},
- {name:"Lake Louise",prov:"Alberta",reg:"AB",lat:51.4419,lng:-116.1622,piste:145,visitors:700,snow:4.6,vert:991,
+ {name:"Lake Louise",prov:"Alberta",reg:"AB",lat:51.4419,lng:-116.1622,piste:145,visitors:700,snow:4.6,vert:991,exp:30,
+  lift:"11 Anlagen inkl. Gipfel-Gondel; das Liftsystem wird laufend mit neuen Hochgeschwindigkeits-Sesseln modernisiert.",
   uniq:"Eines der größten und landschaftlich schönsten Skigebiete der Welt, mit Blick über eine ganze Bergkette bis zum Victoria-Gletscher. Regelmäßiger Halt der Weltcup-Abfahrt, im Banff-Nationalpark."},
- {name:"Sunshine Village",prov:"Alberta",reg:"AB",lat:51.0784,lng:-115.7772,piste:100,visitors:500,snow:9.0,vert:1070,
+ {name:"Sunshine Village",prov:"Alberta",reg:"AB",lat:51.0784,lng:-115.7772,piste:100,visitors:500,snow:9.0,vert:1070,exp:25,
+  lift:"Zugang nur per 8er-Gondel; TeePee Town LX (2015) war Kanadas erste Sesselbahn mit Sitzheizung.",
   uniq:"Liegt direkt auf der kontinentalen Wasserscheide an der Grenze zwischen BC und Alberta. Es kommt mit 100 % Naturschnee aus — ohne Beschneiung — und hat die längste nicht-gletscherbasierte Skisaison Kanadas."},
- {name:"Marmot Basin",prov:"Alberta",reg:"AB",lat:52.7996,lng:-118.0847,piste:68,visitors:180,snow:4.0,vert:914,
+ {name:"Marmot Basin",prov:"Alberta",reg:"AB",lat:52.7996,lng:-118.0847,piste:68,visitors:180,snow:4.0,vert:914,exp:30,
+  lift:"Canadian Rockies Express (2009) — die längste Hochgeschwindigkeits-4er-Sesselbahn der kanadischen Rockies.",
   uniq:"Die höchste Talstation aller kanadischen Skigebiete, tief im Jasper-Nationalpark. Weitläufiges, wunderbar leeres Gelände mit Wildtieren und Blick in den Sternenhimmel."},
- {name:"Mont Tremblant",prov:"Québec",reg:"QC",lat:46.2094,lng:-74.5850,piste:82,visitors:900,snow:4.0,vert:645,
+ {name:"Mont Tremblant",prov:"Québec",reg:"QC",lat:46.2094,lng:-74.5850,piste:82,visitors:900,snow:4.0,vert:645,exp:30,
+  lift:"14 Anlagen; die Panorama-Gondel 'Télécabine Express' startet mitten im Fußgängerdorf.",
   uniq:"Das Kronjuwel des östlichen Nordamerikas — ein vierseitiger Berg rund um ein malerisches Fußgängerdorf mit Kopfsteinpflaster, durchgehend zum besten Skigebiet des Ostens gewählt."},
- {name:"Mont-Sainte-Anne",prov:"Québec",reg:"QC",lat:47.0748,lng:-70.9042,piste:71,visitors:400,snow:4.9,vert:625,
+ {name:"Mont-Sainte-Anne",prov:"Québec",reg:"QC",lat:47.0748,lng:-70.9042,piste:71,visitors:400,snow:4.9,vert:625,exp:25,
+  lift:"Panorama-Gondel zum Gipfel plus beleuchtete Lifte für das größte Nachtski-Areal Kanadas.",
   uniq:"Weite Ausblicke über den zugefrorenen Sankt-Lorenz-Strom, nur 30 Minuten von Québec City entfernt. Berühmt für sein riesiges Nachtski-Gelände und seine Weltcup-Tradition im Ski- und Mountainbike-Sport."},
- {name:"Le Massif de Charlevoix",prov:"Québec",reg:"QC",lat:47.2848,lng:-70.5236,piste:53,visitors:200,snow:6.4,vert:770,
+ {name:"Le Massif de Charlevoix",prov:"Québec",reg:"QC",lat:47.2848,lng:-70.5236,piste:53,visitors:200,snow:6.4,vert:770,exp:30,
+  lift:"Verkehrte Welt: Man parkt am Gipfel und fährt zuerst ab — Hochgeschwindigkeits-Sessel bringen einen wieder hinauf.",
   uniq:"Der höchste Höhenunterschied östlich der Rockies — und man fährt direkt auf den Sankt-Lorenz-Strom zu, der den Horizont unter einem ausfüllt. Im Besitz des Gründers des Cirque du Soleil."},
- {name:"Blue Mountain",prov:"Ontario",reg:"ON",lat:44.5019,lng:-80.3097,piste:26,visitors:750,snow:2.6,vert:220,
+ {name:"Blue Mountain",prov:"Ontario",reg:"ON",lat:44.5019,lng:-80.3097,piste:26,visitors:750,snow:2.6,vert:220,exp:15,
+  lift:"Modernes Liftsystem mit 6er-Sesselbahnen und beleuchteten Pisten für Nachtski.",
   uniq:"Das drittmeistbesuchte Skigebiet ganz Kanadas, dank eines großen, lebendigen Basisdorfs und der Nähe zu Toronto. Bescheidener Höhenunterschied, aber ein Kraftpaket für Nachtski und Après."},
- {name:"Marble Mountain",prov:"Neufundland",reg:"AT",lat:48.9575,lng:-57.7911,piste:39,visitors:90,snow:5.0,vert:518,
+ {name:"Marble Mountain",prov:"Neufundland",reg:"AT",lat:48.9575,lng:-57.7911,piste:39,visitors:90,snow:5.0,vert:518,exp:30,
+  lift:"4 Lifte inkl. Hochgeschwindigkeits-Quad — klein, aber für Atlantik-Kanada ungewöhnlich modern.",
   uniq:"Der Schneefall- und Höhenmeister-Champion Atlantik-Kanadas — vom Meer gespeiste Stürme laden ordentlich Schnee über dem Humber Valley ab, mit Blick aufs Meer vom Gipfel."},
 
- {name:"Park City",prov:"Utah, USA",reg:"US",lat:40.6514,lng:-111.5080,piste:170,visitors:1400,snow:9.0,vert:945,
+ {name:"Park City",prov:"Utah, USA",reg:"US",lat:40.6514,lng:-111.5080,piste:170,visitors:1400,snow:9.0,vert:945,exp:30,
+  lift:"Über 40 Anlagen — die Quicksilver-Gondel (2015) verband Park City mit Canyons zum größten US-Skigebiet.",
   uniq:"Das größte Skigebiet der USA — Park City und Canyons sind durch die Quicksilver-Gondel verbunden. Über 7.300 Acres Gelände direkt an einer historischen Bergbaustadt, nur 45 Minuten von Salt Lake City."},
- {name:"Vail",prov:"Colorado, USA",reg:"US",lat:39.6061,lng:-106.3550,piste:150,visitors:1600,snow:9.1,vert:1052,
+ {name:"Vail",prov:"Colorado, USA",reg:"US",lat:39.6061,lng:-106.3550,piste:150,visitors:1600,snow:9.1,vert:1052,exp:50,
+  lift:"31 Anlagen; Gondola One (2012) verwöhnt mit Sitzheizung und WLAN in den Kabinen.",
   uniq:"Einer der größten und meistbesuchten Berge Nordamerikas, berühmt für seine riesigen 'Back Bowls' — meilenweites, offenes Schüsselgelände hinter dem Gipfelgrat. Dazu ein weitläufiges Dorf im Tiroler Stil."},
- {name:"Breckenridge",prov:"Colorado, USA",reg:"US",lat:39.4783,lng:-106.0742,piste:85,visitors:1600,snow:9.1,vert:1055,
+ {name:"Breckenridge",prov:"Colorado, USA",reg:"US",lat:39.4783,lng:-106.0742,piste:85,visitors:1600,snow:9.1,vert:1055,exp:40,
+  lift:"Die BreckConnect-Gondel (2007) verbindet die Stadt mit dem Berg; dazu einige der höchstgelegenen Sessellifte Nordamerikas.",
   uniq:"Eines der meistbesuchten Skigebiete der USA, verteilt auf fünf Gipfel mit einigen der höchstgelegenen Lifte Nordamerikas. Lebhafte historische Goldgräberstadt an der Talstation."},
- {name:"Steamboat",prov:"Colorado, USA",reg:"US",lat:40.4570,lng:-106.8045,piste:90,visitors:1100,snow:8.6,vert:1120,
+ {name:"Steamboat",prov:"Colorado, USA",reg:"US",lat:40.4570,lng:-106.8045,piste:90,visitors:1100,snow:8.6,vert:1120,exp:40,
+  lift:"Wild Blue Gondola (2023) — mit über 3 km eine der längsten 10er-Gondeln Nordamerikas, Teil eines kompletten Basis-Umbaus.",
   uniq:"Heimat des markenrechtlich geschützten 'Champagne Powder®' — außergewöhnlich leichter, trockener Schnee. Weite Baumabfahrten und eine entspannte Cowboy-Stadt-Atmosphäre in Colorado."},
- {name:"Aspen Snowmass",prov:"Colorado, USA",reg:"US",lat:39.2097,lng:-106.9490,piste:150,visitors:700,snow:7.6,vert:1343,
+ {name:"Aspen Snowmass",prov:"Colorado, USA",reg:"US",lat:39.2097,lng:-106.9490,piste:150,visitors:700,snow:7.6,vert:1343,exp:45,
+  lift:"Die Silver Queen Gondel führt direkt aus Aspen auf den Aspen Mountain; vier Berge, ein Liftverbund.",
   uniq:"Vier Berge auf einem Ticket rund um das glamouröse Aspen. Snowmass allein bietet 1.343 m Höhenunterschied — riesiges, abwechslungsreiches Gelände für alle Könnerstufen."},
- {name:"Big Sky",prov:"Montana, USA",reg:"US",lat:45.2860,lng:-111.4010,piste:160,visitors:500,snow:6.6,vert:1317,
+ {name:"Big Sky",prov:"Montana, USA",reg:"US",lat:45.2860,lng:-111.4010,piste:160,visitors:500,snow:6.6,vert:1317,exp:55,
+  lift:"Lone Peak Tram komplett neu gebaut 2023 (75 Personen); Ramcharger 8 (2018) war Nordamerikas erste 8er-Sesselbahn — mit Sitzheizung und Wetterhaube.",
   uniq:"Gewaltiges Gelände unter der markanten Lone Peak, erschlossen durch eine spektakuläre Seilbahn zum Gipfel. Enorme Fläche bei erstaunlich wenig Andrang in Montana."},
- {name:"Jackson Hole",prov:"Wyoming, USA",reg:"US",lat:43.5875,lng:-110.8279,piste:80,visitors:700,snow:11.7,vert:1262,
+ {name:"Jackson Hole",prov:"Wyoming, USA",reg:"US",lat:43.5875,lng:-110.8279,piste:80,visitors:700,snow:11.7,vert:1262,exp:50,
+  lift:"Die Aerial Tram 'Big Red' (Neubau 2008, 100 Personen) ist die Ikone des Gebiets; dazu die Bridger-Gondel.",
   uniq:"Legendär steil — 1.262 m Höhenunterschied, die berüchtigte Rinne Corbet's Couloir und eine ikonische Luftseilbahn. Ein Mekka für erfahrene Freerider in Wyoming."},
- {name:"Palisades Tahoe",prov:"Kalifornien, USA",reg:"US",lat:39.1970,lng:-120.2357,piste:120,visitors:600,snow:10.5,vert:863,
+ {name:"Palisades Tahoe",prov:"Kalifornien, USA",reg:"US",lat:39.1970,lng:-120.2357,piste:120,visitors:600,snow:10.5,vert:863,exp:30,
+  lift:"Die Base-to-Base-Gondel (2022) verbindet Palisades mit Alpine Meadows; die Aerial Tram fährt seit 1968.",
   uniq:"Austragungsort der Olympischen Winterspiele 1960, heute zwei riesige, per Gondel verbundene Skigebiete hoch über dem Lake Tahoe. Kalifornischer Powder in Hülle und Fülle."},
- {name:"Mammoth Mountain",prov:"Kalifornien, USA",reg:"US",lat:37.6308,lng:-119.0326,piste:100,visitors:1300,snow:10.0,vert:945,
+ {name:"Mammoth Mountain",prov:"Kalifornien, USA",reg:"US",lat:37.6308,lng:-119.0326,piste:100,visitors:1300,snow:10.0,vert:945,exp:35,
+  lift:"25 Anlagen; die Panorama-Gondel fährt bis auf den 3.369 m hohen Vulkangipfel.",
   uniq:"Ein hoch aufragender Vulkan in der kalifornischen Sierra Nevada mit enormem Schneefall und einer der längsten Saisons Nordamerikas — oft bis in den Sommer hinein."},
- {name:"Snowbird",prov:"Utah, USA",reg:"US",lat:40.5810,lng:-111.6556,piste:65,visitors:550,snow:12.7,vert:975,
+ {name:"Snowbird",prov:"Utah, USA",reg:"US",lat:40.5810,lng:-111.6556,piste:65,visitors:550,snow:12.7,vert:975,exp:45,
+  lift:"Die Aerial Tram (seit 1971, 125 Personen) ist eine der berühmtesten Pendelbahnen der USA — Gipfel in 8 Minuten.",
   uniq:"Tief im Little Cottonwood Canyon in Utah — Heimat des 'Greatest Snow on Earth' mit fast 13 m federleichtem Pulverschnee pro Jahr und einer Saison bis weit in den Mai."},
- {name:"Killington",prov:"Vermont, USA",reg:"US",lat:43.6045,lng:-72.8201,piste:100,visitors:900,snow:6.4,vert:933,
+ {name:"Killington",prov:"Vermont, USA",reg:"US",lat:43.6045,lng:-72.8201,piste:100,visitors:900,snow:6.4,vert:933,exp:40,
+  lift:"K-1 Express-Gondel auf den Hauptgipfel; dazu seit 2018 eine moderne 6er-Sesselbahn mit Wetterhaube.",
   uniq:"Das 'Biest des Ostens' — das größte Skigebiet im Osten der USA, verteilt auf sechs Gipfel. Bekannt für die längste Saison der Region und den Weltcup-Auftakt der Damen."}
 ];
 
@@ -185,24 +240,29 @@ resorts.forEach(r=>{
   bounds.push([r.lat,r.lng]);
   const c=COLORS[r.reg];
   const sz=pinSize(r.piste);
+  const img=REGION_IMG[r.reg];
   const m=L.marker([r.lat,r.lng],{icon:pinIcon(c,sz),riseOnHover:true}).addTo(map);
 
   const html=`<div class="pop">
     <div class="prov">${r.prov}</div>
     <h2>${r.name}</h2>
+    <img class="rimg" src="${img.url}" alt="${img.cap}" loading="lazy">
+    <div class="rcap">${img.cap}</div>
     <div class="stats">
       <div class="stat"><div class="v">${r.piste}</div><div class="l">Pisten-km</div></div>
       <div class="stat"><div class="v">${fmt(r.visitors)}</div><div class="l">Besucher / Jahr</div></div>
       <div class="stat hl"><div class="v">${r.snow} m</div><div class="l">❄ Schnee / Jahr</div></div>
+      <div class="stat"><div class="v">~${r.exp} %</div><div class="l">◆ Experten-Terrain</div></div>
     </div>
-    <div class="stat" style="margin:-4px 0 10px;display:inline-block;padding:5px 12px">
+    <div class="stat" style="margin:-4px 0 4px;display:inline-block;padding:5px 12px">
       <span style="font-size:11px;color:var(--muted)">Höhenunterschied </span>
       <b style="color:#7fc0ff">${r.vert} m</b>
     </div>
+    <div class="lift"><span class="lt">🚡 Bahnen &amp; Lifte</span>${r.lift}</div>
     <div class="uniq">${r.uniq}</div>
   </div>`;
 
-  m.bindPopup(html,{maxWidth:290,minWidth:250});
+  m.bindPopup(html,{maxWidth:290,minWidth:260});
   m.bindTooltip(`${r.name} · ${r.piste} km`,{direction:'top',offset:[0,-sz+4]});
 });
 
