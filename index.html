@@ -56,6 +56,18 @@
     transition:transform .12s ease}
   .ski-pin:hover{transform:scale(1.18);z-index:1000}
   a.attrib{color:#6c86ad}
+  /* onboarding hint modal */
+  #hint{position:fixed;inset:0;background:rgba(4,8,18,.72);display:none;align-items:center;
+    justify-content:center;z-index:2000;backdrop-filter:blur(2px)}
+  #hint.show{display:flex}
+  .hintbox{position:relative;background:#101c31;border:1px solid #2b3f63;border-radius:16px;
+    padding:38px 42px 34px;max-width:360px;margin:20px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.65)}
+  .hintbox h2{margin:18px 0 0;font-size:17.5px;line-height:1.45;color:var(--ink)}
+  #hintClose{position:absolute;top:8px;right:12px;background:none;border:none;color:#9db2d0;
+    font-size:34px;font-weight:300;cursor:pointer;line-height:1;padding:4px 8px}
+  #hintClose:hover{color:var(--ink)}
+  .hintpin{animation:hintbounce 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+  @keyframes hintbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
   @media(max-width:800px){#side{display:none}}
 </style>
 </head>
@@ -111,6 +123,18 @@
         Höhenunterschied (20&nbsp;%) — getrennt gewertet für Kanada und die USA.
         Fotos: Wikimedia Commons. Daten zusammengestellt im Juli 2026.</p>
     </aside>
+  </div>
+</div>
+
+<div id="hint" role="dialog" aria-modal="true">
+  <div class="hintbox">
+    <button id="hintClose" aria-label="Schließen">&times;</button>
+    <svg class="hintpin" width="78" height="110" viewBox="0 0 24 34" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0C5.4 0 0 5.3 0 11.9 0 20.2 12 34 12 34s12-13.8 12-22.1C24 5.3 18.6 0 12 0z"
+        fill="#ff4d4d" stroke="#0b1220" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="4.4" fill="#0b1220" fill-opacity="0.9"/>
+    </svg>
+    <h2>Drücke auf eine der Stecknadeln, um mehr zum Skigebiet zu erfahren!</h2>
   </div>
 </div>
 
@@ -284,9 +308,26 @@ resorts.forEach(r=>{
 
   m.bindPopup(html,{maxWidth:290,minWidth:260});
   m.bindTooltip(`${r.name} · ${r.piste} km`,{direction:'top',offset:[0,-sz+4]});
+  m.on('click',()=>{pinInteracted=true;hideHint();});
 });
 
 map.fitBounds(bounds,{padding:[60,60]});
+
+// onboarding hint: nudge after 40 s without any pin click, once more after 3 min
+let pinInteracted=false,hintOpenedAt=0;
+const hintEl=document.getElementById('hint');
+function showHint(){
+  if(pinInteracted)return;
+  hintEl.classList.add('show');
+  hintOpenedAt=Date.now();
+}
+function hideHint(){hintEl.classList.remove('show');}
+document.getElementById('hintClose').addEventListener('click',hideHint);
+hintEl.addEventListener('click',e=>{
+  if(e.target===hintEl&&Date.now()-hintOpenedAt>=3000)hideHint(); // backdrop click closes only after 3 s
+});
+setTimeout(showHint,40000);
+setTimeout(showHint,180000);
 </script>
 </body>
 </html>
