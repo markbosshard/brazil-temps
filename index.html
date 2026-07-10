@@ -107,6 +107,8 @@
         Pistenkilometer und Höhenunterschied stammen aus offiziellen Angaben der Skigebiete. <b>Die jährlichen Besucherzahlen sind ungefähre Werte</b> —
         die meisten kanadischen Skigebiete veröffentlichen keine genauen Zahlen, daher sind kleinere Gebiete Schätzungen zur Einordnung.
         Experten-Anteile sind aus den offiziellen Pistenplänen auf 5&nbsp;% gerundet; Liftdaten Stand Juli 2026.
+        Der <b>#Rang</b> kombiniert Pistenkilometer (35&nbsp;%), Besucher (25&nbsp;%), Schneefall (20&nbsp;%) und
+        Höhenunterschied (20&nbsp;%) — getrennt gewertet für Kanada und die USA.
         Fotos: Wikimedia Commons. Daten zusammengestellt im Juli 2026.</p>
     </aside>
   </div>
@@ -221,6 +223,20 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
 
 const fmt=n=>n>=1000?(n/1000).toFixed(n%1000===0?0:1).replace('.',',')+' Mio.':n+' Tsd.';
 
+// composite rank: piste km 35% + visitors 25% + snowfall 20% + vertical 20%,
+// min-max-normalized over all resorts, ranked separately within Canada and the US
+{
+  const W={piste:.35,visitors:.25,snow:.20,vert:.20};
+  const rng={};
+  Object.keys(W).forEach(k=>{const v=resorts.map(r=>r[k]);rng[k]=[Math.min(...v),Math.max(...v)];});
+  const score=r=>Object.keys(W).reduce((s,k)=>s+W[k]*(r[k]-rng[k][0])/(rng[k][1]-rng[k][0]),0);
+  [true,false].forEach(isUS=>{
+    resorts.filter(r=>(r.reg==='US')===isUS)
+      .sort((a,b)=>score(b)-score(a))
+      .forEach((r,i)=>{r.rank=i+1;r.rankIn=isUS?'in den USA':'in Kanada';});
+  });
+}
+
 // pin size scales with piste km — wider range so big vs small reads clearly
 const minP=Math.min(...resorts.map(r=>r.piste)), maxP=Math.max(...resorts.map(r=>r.piste));
 const pinSize=p=>{const t=(p-minP)/(maxP-minP); return Math.round(20+Math.pow(t,0.85)*44);}; // 20–64px tall
@@ -257,6 +273,10 @@ resorts.forEach(r=>{
     <div class="stat" style="margin:-4px 0 4px;display:inline-block;padding:5px 12px">
       <span style="font-size:11px;color:var(--muted)">Höhenunterschied </span>
       <b style="color:#7fc0ff">${r.vert} m</b>
+    </div>
+    <div class="stat" style="margin:-4px 0 4px 4px;display:inline-block;padding:5px 12px${r.rank===1?';border-color:#8a6d1f;background:#2a2410':''}">
+      <b style="color:${r.rank===1?'#ffd75e':'#7fc0ff'}">${r.rank===1?'🏆 ':''}#${r.rank}</b>
+      <span style="font-size:11px;color:var(--muted)"> ${r.rankIn}</span>
     </div>
     <div class="lift"><span class="lt">🚡 Bahnen &amp; Lifte</span>${r.lift}</div>
     <div class="uniq">${r.uniq}</div>
