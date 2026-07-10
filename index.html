@@ -51,6 +51,10 @@
   .lift .lt{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:2px}
   .uniq{font-size:12.7px;color:#dbe7fb;background:#12203a;border-left:3px solid var(--bc);
     padding:8px 10px;border-radius:0 8px 8px 0;margin-top:8px}
+  a.pmap{display:block;margin-top:8px;padding:8px 10px;text-align:center;font-size:12.5px;
+    font-weight:600;color:#cfe4ff;background:#1b2942;border:1px solid #2b3f63;border-radius:8px;
+    text-decoration:none;letter-spacing:.2px}
+  a.pmap:hover{background:#22345a;border-color:#3a5a8f;color:#fff}
   .leaflet-container{background:#0b1220}
   .ski-pin{background:none;border:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));
     transition:transform .12s ease}
@@ -150,6 +154,37 @@ const REGION_IMG={
  ON:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Blue_Mountain_Ontario_at_night_%28landscape%29.jpg/500px-Blue_Mountain_Ontario_at_night_%28landscape%29.jpg",cap:"Blue Mountain bei Nacht, Ontario · Wikimedia Commons"},
  AT:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Marble_Mountain_Ski_resort.jpg/500px-Marble_Mountain_Ski_resort.jpg",cap:"Marble Mountain, Neufundland · Wikimedia Commons"},
  US:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Jackson_hole_new_tram.jpg/500px-Jackson_hole_new_tram.jpg",cap:"Aerial Tram, Jackson Hole · Wikimedia Commons"}
+};
+
+// official trail map page per resort (all URLs verified July 2026)
+const PMAP={
+ "Whistler Blackcomb":"https://www.whistlerblackcomb.com/the-mountain/about-the-mountain/trail-maps.aspx",
+ "Sun Peaks":"https://www.sunpeaksresort.com/ski-ride/the-mountain/trail-maps-stats",
+ "Big White":"https://www.bigwhite.com/explore/mountain-info/maps",
+ "Revelstoke":"https://www.revelstokemountainresort.com/discover/about/trail-maps/",
+ "Kicking Horse":"https://kickinghorseresort.com/discover-kickinghorse/resort-map/",
+ "Fernie Alpine":"https://skifernie.com/mountain-info/trail-map/",
+ "SilverStar":"https://www.skisilverstar.com/the-mountain/mountain-maps/winter-maps/",
+ "Whitewater":"https://skiwhitewater.com/trail-maps",
+ "Lake Louise":"https://www.skilouise.com/trail-maps/",
+ "Sunshine Village":"https://www.skibanff.com/trail-maps",
+ "Marmot Basin":"https://www.skimarmot.com/mountain/trail-map-lift-status/",
+ "Mont Tremblant":"https://www.tremblant.ca/mountain-village/trail-maps",
+ "Mont-Sainte-Anne":"https://mont-sainte-anne.com/en/alpine-skiing-trail-maps/",
+ "Le Massif de Charlevoix":"https://www.lemassif.com/en/trail-map/",
+ "Blue Mountain":"https://www.bluemountain.ca/about-us/maps",
+ "Marble Mountain":"https://skimarble.com/trail-map/",
+ "Park City":"https://www.parkcitymountain.com/the-mountain/about-the-mountain/trail-map.aspx",
+ "Vail":"https://www.vail.com/the-mountain/about-the-mountain/trail-maps.aspx",
+ "Breckenridge":"https://www.breckenridge.com/the-mountain/about-the-mountain/trail-maps.aspx",
+ "Steamboat":"https://www.steamboat.com/the-mountain/trail-map",
+ "Aspen Snowmass":"https://www.aspensnowmass.com/four-mountains/trail-maps",
+ "Big Sky":"https://bigskyresort.com/trail-maps",
+ "Jackson Hole":"https://www.jacksonhole.com/maps/mountain-winter",
+ "Palisades Tahoe":"https://www.palisadestahoe.com/mountain-information/trail-maps",
+ "Mammoth Mountain":"https://www.mammothmountain.com/on-the-mountain/winter-trail-map",
+ "Snowbird":"https://www.snowbird.com/maps/",
+ "Killington":"https://www.killington.com/winter-trail-map"
 };
 
 // piste = marked trail km | visitors = approx annual (thousands) | snow = avg annual snowfall (m)
@@ -304,6 +339,7 @@ resorts.forEach(r=>{
     </div>
     <div class="lift"><span class="lt">🚡 Bahnen &amp; Lifte</span>${r.lift}</div>
     <div class="uniq">${r.uniq}</div>
+    <a class="pmap" href="${PMAP[r.name]}" target="_blank" rel="noopener">🗺️ Pistenplan öffnen ↗</a>
   </div>`;
 
   m.bindPopup(html,{maxWidth:290,minWidth:260});
